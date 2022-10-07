@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prime Time", "Prime Time\Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Means to an End", "Means to an End\Means to an End.csproj", "{66CD376A-7861-435D-A1D5-5AA4B8AFBB9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budget Chat", "Budget Chat\Budget Chat.csproj", "{EFEAF285-0710-4C47-9575-897BC3C2D3ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget Chat", "Budget Chat\Budget Chat.csproj", "{EFEAF285-0710-4C47-9575-897BC3C2D3ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unusual Database Program", "Unusual Database Program\Unusual Database Program.csproj", "{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EFEAF285-0710-4C47-9575-897BC3C2D3ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFEAF285-0710-4C47-9575-897BC3C2D3ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFEAF285-0710-4C47-9575-897BC3C2D3ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
