@@ -48,7 +48,8 @@ static void HandleConnection(TcpClient client)
                         break;
                     case 'Q':
                         var result = HandleQuery(data, first, second);
-                        writer.Write(IntToHex(result));
+                        var response = IntToHex(result);
+                        writer.Write(response);
                         Console.WriteLine(result);
                         break;
                 }

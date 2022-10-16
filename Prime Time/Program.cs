@@ -41,7 +41,7 @@ static async Task HandleConnectionAsync(TcpClient client)
 
             try
             {
-                Console.WriteLine(line.ToString());
+                Console.WriteLine(line);
                 var request = JsonSerializer.Deserialize<Request>(line);
                 var result = ValidateRequest(request) && IsPrime(request?.Number);
                 var response = new Response() { Method = Method, Prime = result };

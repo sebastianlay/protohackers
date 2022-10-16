@@ -5,7 +5,7 @@ using System.Text;
 const int DefaultPort = 19114;
 
 int port = args.Length > 0 && int.TryParse(args[0], out port) ? port : DefaultPort;
-var listener = new UdpClient(port);
+var client = new UdpClient(port);
 
 var database = new Dictionary<string, string> {
     { "version", "My Unusual Database Program 1.0" }
@@ -17,7 +17,7 @@ try
 {
     while (true)
     {
-        var result = await listener.ReceiveAsync();
+        var result = await client.ReceiveAsync();
         HandleMessageAsync(result.Buffer, result.RemoteEndPoint);
     }
 }
@@ -27,7 +27,7 @@ catch (Exception e)
 }
 finally
 {
-    listener.Close();
+    client.Close();
 }
 
 async Task HandleMessageAsync(byte[] buffer, IPEndPoint endpoint)
@@ -49,12 +49,11 @@ async Task HandleMessageAsync(byte[] buffer, IPEndPoint endpoint)
         else
         {
             // retrieve request
-            var response = database.TryGetValue(message, out var value)
-                ? $"{message}={value}"
-                : $"{message}=";
+            var value = database.GetValueOrDefault(message) ?? string.Empty;
+            var response = $"{message}={value}";
             Console.WriteLine($"> {response}");
             var result = Encoding.ASCII.GetBytes(response);
-            await listener.SendAsync(result, endpoint);
+            await client.SendAsync(result, endpoint);
         }
     }
     catch (Exception e)

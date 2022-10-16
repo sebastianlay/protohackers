@@ -25,7 +25,6 @@ while (true)
 async Task HandleConnection(TcpClient client)
 {
     Console.WriteLine("Client connected");
-
     string name;
 
     try
@@ -96,22 +95,20 @@ async Task SendToClient(string message, StreamWriter writer)
 
 async Task SendToAllClients(string message, string except)
 {
-    if (clients == null || !clients.Any())
+    if (clients?.Any() != true)
         return;
 
     var recipients = clients.Where(client => client.Key != except);
     var writers = recipients.Select(client => client.Value);
     foreach (var writer in writers)
-    {
-        await writer.WriteLineAsync(message);
-        await writer.FlushAsync();
-    }
+        await SendToClient(message, writer);
+
     Console.WriteLine(message);
 }
 
 string GetClientNames()
 {
-    return clients == null || !clients.Any() ? string.Empty : string.Join(", ", clients.Keys);
+    return clients?.Any() == true ? string.Join(", ", clients.Keys) : string.Empty;
 }
 
 void DisconnectClient(string name)
@@ -125,7 +122,7 @@ void DisconnectClient(string name)
 
 bool IsNameValid(string name)
 {
-    if (clients != null && clients.Any() && clients.ContainsKey(name))
+    if (clients?.Any() == true && clients.ContainsKey(name))
         return false;
 
     return name.All(char.IsLetterOrDigit);
