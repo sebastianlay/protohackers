@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Means to an End", "Means to
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budget Chat", "Budget Chat\Budget Chat.csproj", "{EFEAF285-0710-4C47-9575-897BC3C2D3ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unusual Database Program", "Unusual Database Program\Unusual Database Program.csproj", "{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unusual Database Program", "Unusual Database Program\Unusual Database Program.csproj", "{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mob in the Middle", "Mob in the Middle\Mob in the Middle.csproj", "{4BF21C0D-3950-4FAA-8D7F-A209575B6805}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72A3252E-2B99-4DBF-AF6B-BD7F9CBEF0F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BF21C0D-3950-4FAA-8D7F-A209575B6805}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BF21C0D-3950-4FAA-8D7F-A209575B6805}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BF21C0D-3950-4FAA-8D7F-A209575B6805}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BF21C0D-3950-4FAA-8D7F-A209575B6805}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
