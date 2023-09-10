@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unusual Database Program", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mob in the Middle", "Mob in the Middle\Mob in the Middle.csproj", "{4BF21C0D-3950-4FAA-8D7F-A209575B6805}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Speed Daemon", "Speed Daemon\Speed Daemon.csproj", "{E24A1B48-F839-46CC-A11B-05032508F40F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Speed Daemon", "Speed Daemon\Speed Daemon.csproj", "{E24A1B48-F839-46CC-A11B-05032508F40F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Line Reversal", "Line Reversal\Line Reversal.csproj", "{AC6D7100-1945-4544-9260-3727484AE8BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{E24A1B48-F839-46CC-A11B-05032508F40F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E24A1B48-F839-46CC-A11B-05032508F40F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E24A1B48-F839-46CC-A11B-05032508F40F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6D7100-1945-4544-9260-3727484AE8BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6D7100-1945-4544-9260-3727484AE8BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6D7100-1945-4544-9260-3727484AE8BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6D7100-1945-4544-9260-3727484AE8BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
