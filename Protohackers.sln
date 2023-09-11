@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Speed Daemon", "Speed Daemo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Line Reversal", "Line Reversal\Line Reversal.csproj", "{AC6D7100-1945-4544-9260-3727484AE8BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insecure Sockets Layer", "Insecure Sockets Layer\Insecure Sockets Layer.csproj", "{ECF9340E-27EC-4C7F-A038-4BE9780959B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{AC6D7100-1945-4544-9260-3727484AE8BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC6D7100-1945-4544-9260-3727484AE8BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6D7100-1945-4544-9260-3727484AE8BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECF9340E-27EC-4C7F-A038-4BE9780959B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECF9340E-27EC-4C7F-A038-4BE9780959B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECF9340E-27EC-4C7F-A038-4BE9780959B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECF9340E-27EC-4C7F-A038-4BE9780959B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
