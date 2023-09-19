@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
@@ -22,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insecure Sockets Layer", "Insecure Sockets Layer\Insecure Sockets Layer.csproj", "{ECF9340E-27EC-4C7F-A038-4BE9780959B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Job Centre", "Job Centre\Job Centre.csproj", "{9240A795-0C37-41ED-8BE2-76AA09151708}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voracious Code Storage", "Voracious Code Storage\Voracious Code Storage.csproj", "{1A98B338-D848-4E9C-93CD-DDA922B7301B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{9240A795-0C37-41ED-8BE2-76AA09151708}.Debug|x64.Build.0 = Debug|x64
 		{9240A795-0C37-41ED-8BE2-76AA09151708}.Release|x64.ActiveCfg = Release|x64
 		{9240A795-0C37-41ED-8BE2-76AA09151708}.Release|x64.Build.0 = Release|x64
+		{1A98B338-D848-4E9C-93CD-DDA922B7301B}.Debug|x64.ActiveCfg = Debug|x64
+		{1A98B338-D848-4E9C-93CD-DDA922B7301B}.Debug|x64.Build.0 = Debug|x64
+		{1A98B338-D848-4E9C-93CD-DDA922B7301B}.Release|x64.ActiveCfg = Release|x64
+		{1A98B338-D848-4E9C-93CD-DDA922B7301B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
