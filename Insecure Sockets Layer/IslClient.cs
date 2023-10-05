@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 
-namespace Insecure_Sockets_Layer
+namespace InsecureSocketsLayer
 {
     /// <summary>
     /// Server for the "Insecure Sockets Layer" protocol
@@ -12,7 +12,7 @@ namespace Insecure_Sockets_Layer
         /// Handles the connection of a new client
         /// </summary>
         /// <param name="client">the connection the client connected on</param>
-        public static async Task HandleConnection(TcpClient client)
+        internal static async Task HandleConnection(TcpClient client)
         {
             using var stream = client.GetStream();
 
@@ -21,6 +21,7 @@ namespace Insecure_Sockets_Layer
 
             var hasCipherSpec = false;
             var cipherSpecLength = 0;
+
             List<Operation> decodingOperations = new();
             List<Operation> encodingOperations = new();
 
@@ -141,23 +142,23 @@ namespace Insecure_Sockets_Layer
                 switch (message.Span[index])
                 {
                     case 1:
-                        result.Add(new ReverseBits());
+                        result.Add(new ReverseBitsOp());
                         index++;
                         break;
                     case 2:
-                        result.Add(new Xor { Parameter = message.Span[index + 1] });
+                        result.Add(new XorOp { Parameter = message.Span[index + 1] });
                         index += 2;
                         break;
                     case 3:
-                        result.Add(new XorPos());
+                        result.Add(new XorPosOp());
                         index++;
                         break;
                     case 4:
-                        result.Add(new Add { Parameter = message.Span[index + 1] });
+                        result.Add(new AddOp { Parameter = message.Span[index + 1] });
                         index += 2;
                         break;
                     case 5:
-                        result.Add(new AddPos());
+                        result.Add(new AddPosOp());
                         index++;
                         break;
                     default:
@@ -211,7 +212,7 @@ namespace Insecure_Sockets_Layer
         }
 
         /// <summary>
-        /// Returns the count for any given toy (e.g. 15 for "15x dog on a string") 
+        /// Returns the count for any given toy (e.g. 15 for "15x dog on a string")
         /// </summary>
         /// <param name="value">the given toy</param>
         /// <returns>the count parsed as a number</returns>

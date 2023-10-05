@@ -5,9 +5,9 @@ namespace SpeedDaemon
     /// <summary>
     /// Handles incoming and outgoing messages for a client
     /// </summary>
-    public class Client
+    internal sealed class Client : IDisposable
     {
-        public Client(TcpClient tcpClient)
+        internal Client(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
             NetworkStream stream = tcpClient.GetStream();
@@ -16,21 +16,28 @@ namespace SpeedDaemon
         }
 
         private readonly TcpClient tcpClient;
+
         private readonly BinaryReader reader;
+
         private readonly BinaryWriter writer;
 
-        public bool IsCamera { get; private set; }
-        public bool IsDispatcher { get; private set; }
-        public ushort? Road { get; private set; }
-        public ushort? Mile { get; private set; }
-        public ushort[]? Roads { get; private set; }
-        public Timer? Heartbeat { get; private set; }
+        internal bool IsCamera { get; private set; }
+
+        internal bool IsDispatcher { get; private set; }
+
+        internal ushort? Road { get; private set; }
+
+        internal ushort? Mile { get; private set; }
+
+        internal ushort[]? Roads { get; private set; }
+
+        internal Timer? Heartbeat { get; private set; }
 
         /// <summary>
         /// Reads the first byte of the next message and determines
         /// how to handle the rest of the incoming message
         /// </summary>
-        public void HandleNextMessage()
+        internal void HandleNextMessage()
         {
             var operation = Helper.ReadU8(reader);
             switch (operation)
@@ -146,7 +153,7 @@ namespace SpeedDaemon
         /// Sends the given error message to the client and closes the connection
         /// </summary>
         /// <param name="message"></param>
-        public void SendErrorMessage(string message)
+        private void SendErrorMessage(string message)
         {
             Helper.Write(writer, 0x10);
             Helper.Write(writer, message);
@@ -157,7 +164,7 @@ namespace SpeedDaemon
         /// Sends the given ticket to the client
         /// </summary>
         /// <param name="ticket"></param>
-        public void SendTicketMessage(Ticket ticket)
+        internal void SendTicketMessage(Ticket ticket)
         {
             Helper.Write(writer, 0x21);
             Helper.Write(writer, ticket.Plate);
@@ -182,12 +189,21 @@ namespace SpeedDaemon
         /// <summary>
         /// Closes the connection to the client and releases all resources
         /// </summary>
-        public void Close()
+        internal void Close()
         {
             Heartbeat?.Dispose();
             reader.Close();
             writer.Close();
             tcpClient.Close();
+        }
+
+        /// <summary>
+        /// Disposes the client
+        /// </summary>
+        public void Dispose()
+        {
+            Close();
+            GC.SuppressFinalize(this);
         }
     }
 }

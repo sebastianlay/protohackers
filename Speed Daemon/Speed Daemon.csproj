@@ -3,20 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>Speed_Daemon</RootNamespace>
+    <RootNamespace>SpeedDaemon</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>SpeedDaemon</AssemblyName>
     <Platforms>x64</Platforms>
     <AnalysisLevel>latest-Recommended</AnalysisLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NoWarn>1701;1702;4014</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NoWarn>1701;1702;4014</NoWarn>
   </PropertyGroup>
 
 </Project>

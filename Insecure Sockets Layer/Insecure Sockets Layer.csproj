@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>Insecure_Sockets_Layer</RootNamespace>
+    <RootNamespace>InsecureSocketsLayer</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>InsecureSocketsLayer</AssemblyName>

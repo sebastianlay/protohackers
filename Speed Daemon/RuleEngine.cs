@@ -6,12 +6,12 @@ namespace SpeedDaemon
     /// Saves the reported data in a central place and determines
     /// whether tickets have to be issued based on incoming data
     /// </summary>
-    public static class RuleEngine
+    internal static class RuleEngine
     {
         private static readonly ConcurrentDictionary<(string, ushort), List<Observation>> observations = new();
         private static readonly ConcurrentDictionary<Guid, Ticket> tickets = new();
 
-        public static ConcurrentDictionary<ushort, ushort> SpeedLimits { get; set; } = new();
+        internal static ConcurrentDictionary<ushort, ushort> SpeedLimits { get; } = new();
 
         private static readonly object observationsLock = new();
 
@@ -20,7 +20,7 @@ namespace SpeedDaemon
         /// all previously submitted observations
         /// </summary>
         /// <param name="submittedObservation"></param>
-        public static void AddObservation(Observation submittedObservation)
+        internal static void AddObservation(Observation submittedObservation)
         {
             lock (observationsLock)
             {
@@ -113,8 +113,7 @@ namespace SpeedDaemon
         /// for a newly registered dispatcher on the given roads
         /// </summary>
         /// <param name="roads"></param>
-        /// <returns></returns>
-        public static void CheckStoredTickets(ushort[] roads)
+        internal static void CheckStoredTickets(ushort[] roads)
         {
             foreach (var road in roads)
             {

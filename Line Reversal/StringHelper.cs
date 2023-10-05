@@ -1,4 +1,4 @@
-﻿namespace Line_Reversal
+﻿namespace LineReversal
 {
     /// <summary>
     /// Collection of string related helper functions
@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="s">the string that should be reversed</param>
         /// <returns>the string in reverse</returns>
-        public static string Reverse(string s)
+        internal static string Reverse(string s)
         {
             if (string.IsNullOrEmpty(s))
                 return s;
@@ -26,12 +26,11 @@
         /// <param name="s">the string that should be split</param>
         /// <param name="chunkSize">the maximum size of the chunks</param>
         /// <returns>a list of chunks</returns>
-        public static List<string> GetInChunks(string s, int chunkSize)
+        internal static IEnumerable<string> GetInChunks(string s, int chunkSize)
         {
             return s.Chunk(chunkSize)
                 .Select(x => new string(x))
-                .Where(x => !string.IsNullOrEmpty(x))
-                .ToList();
+                .Where(x => !string.IsNullOrEmpty(x));
         }
 
         /// <summary>
@@ -39,7 +38,7 @@
         /// </summary>
         /// <param name="s">the string that should be escaped</param>
         /// <returns>the escaped string</returns>
-        public static string Escape(string s)
+        internal static string Escape(string s)
         {
             return s.Replace(@"\", @"\\").Replace("/", @"\/");
         }
@@ -49,7 +48,7 @@
         /// </summary>
         /// <param name="s">the string that should be unescaped</param>
         /// <returns>the unescaped string</returns>
-        public static string Unescape(string s)
+        internal static string Unescape(string s)
         {
             return s.Replace(@"\/", "/").Replace(@"\\", @"\");
         }
@@ -59,7 +58,7 @@
         /// </summary>
         /// <param name="s">the string that should be escaped</param>
         /// <returns>the escaped string</returns>
-        public static string EscapeForConsole(string s)
+        internal static string EscapeForConsole(string s)
         {
             return s.Replace("\n", "\\n");
         }

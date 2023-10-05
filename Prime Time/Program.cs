@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using PrimeTime;
 
 const int DefaultPort = 19111;
 const string Method = "isPrime";
@@ -15,7 +16,7 @@ while (true)
     try
     {
         var client = await listener.AcceptTcpClientAsync();
-        HandleConnectionAsync(client);
+        _ = HandleConnectionAsync(client);
     }
     catch (Exception e)
     {
@@ -43,7 +44,7 @@ static async Task HandleConnectionAsync(TcpClient client)
             {
                 Console.WriteLine(line);
                 var request = JsonSerializer.Deserialize<Request>(line);
-                var result = ValidateRequest(request) && IsPrime(request?.Number);
+                var result = ValidateRequest(request) && IsPrime(request?.Number ?? 0);
                 var response = new Response() { Method = Method, Prime = result };
 
                 await JsonSerializer.SerializeAsync(stream, response);
@@ -71,9 +72,9 @@ static async Task HandleConnectionAsync(TcpClient client)
     Console.WriteLine("Client disconnected");
 }
 
-static bool IsPrime(double? number)
+static bool IsPrime(double number)
 {
-    if (number == null || (number % 1) != 0 || number <= 1)
+    if (number % 1 != 0 || number <= 1)
         return false;
 
     if (number == 2)
@@ -82,10 +83,13 @@ static bool IsPrime(double? number)
     if (number % 2 == 0)
         return false;
 
-    var boundary = Math.Floor(Math.Sqrt(Convert.ToDouble(number)));
+    var sqrt = Math.Sqrt(number);
+    var boundary = Math.Floor(sqrt);
     for (int i = 3; i <= boundary; i += 2)
+    {
         if (number % i == 0)
             return false;
+    }
 
     return true;
 }
@@ -98,20 +102,23 @@ static bool ValidateRequest(Request? request)
     return true;
 }
 
-public class Request
+namespace PrimeTime
 {
-    [JsonPropertyName("method")]
-    public string? Method { get; set; }
+    internal sealed class Request
+    {
+        [JsonPropertyName("method")]
+        internal string? Method { get; set; }
 
-    [JsonPropertyName("number")]
-    public double? Number { get; set; }
-}
+        [JsonPropertyName("number")]
+        internal double? Number { get; set; }
+    }
 
-public class Response
-{
-    [JsonPropertyName("method")]
-    public string? Method { get; set; }
+    internal sealed class Response
+    {
+        [JsonPropertyName("method")]
+        internal string? Method { get; set; }
 
-    [JsonPropertyName("prime")]
-    public bool Prime { get; set; }
+        [JsonPropertyName("prime")]
+        internal bool Prime { get; set; }
+    }
 }

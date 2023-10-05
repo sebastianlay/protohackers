@@ -1,24 +1,24 @@
 ﻿using System.Text.Json;
 
-namespace Job_Centre
+namespace JobCentre
 {
-    internal class ErrorMessage
+    internal sealed class ErrorMessage
     {
-        public string Status => "error";
+        internal static string Status => "error";
 
-        public string? Error { get; set; }
+        internal string? Error { get; set; }
     }
 
-    internal class StatusMessage
+    internal sealed class StatusMessage
     {
-        public string? Status { get; set; }
+        internal string? Status { get; set; }
 
-        public int? Id { get; set; }
+        internal int? Id { get; set; }
 
-        public JsonElement? Job { get; set; }
+        internal JsonElement? Job { get; set; }
 
-        public int? Pri { get; set; }
+        internal int? Pri { get; set; }
 
-        public string? Queue { get; set; }
+        internal string? Queue { get; set; }
     }
 }

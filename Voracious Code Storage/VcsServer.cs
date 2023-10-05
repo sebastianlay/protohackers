@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Voracious_Code_Storage
+namespace VoraciousCodeStorage
 {
     internal static partial class VcsServer
     {
@@ -22,7 +22,7 @@ namespace Voracious_Code_Storage
         /// Main entry point for new TCP connections
         /// </summary>
         /// <param name="client"></param>
-        public static async Task HandleConnectionAsync(TcpClient client)
+        internal static async Task HandleConnectionAsync(TcpClient client)
         {
             using var stream = client.GetStream();
             using var streamReader = new StreamReader(stream);
@@ -50,7 +50,7 @@ namespace Voracious_Code_Storage
 
                     var splitLine = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     var verb = splitLine[0];
-                    var verbLower = verb.ToLower();
+                    var verbLower = verb.ToLowerInvariant();
 
                     var args = Array.Empty<string>();
                     if (splitLine.Length > 1)
@@ -118,7 +118,7 @@ namespace Voracious_Code_Storage
                 return;
             }
 
-            if (!Files.ContainsKey(file))
+            if (!Files.TryGetValue(file, out var existingFile))
             {
                 await SendMessageAsync("ERR no such file", stream);
                 return;
@@ -135,13 +135,13 @@ namespace Voracious_Code_Storage
                     return;
                 }
 
-                if (Files[file].Count >= revision)
-                    result = Files[file][revision - 1];
+                if (existingFile.Count >= revision)
+                    result = existingFile[revision - 1];
             }
             else // return the latest revision if none was given
             {
-                if (Files[file].Count > 0)
-                    result = Files[file][^1];
+                if (existingFile.Count > 0)
+                    result = existingFile[^1];
             }
 
             if (result == null)
@@ -196,12 +196,12 @@ namespace Voracious_Code_Storage
             }
 
             // check if file already exists
-            if (Files.ContainsKey(file))
+            if (Files.TryGetValue(file, out var existingFile))
             {
                 // only add new version if previous version does not match new version
                 var previousVersion = Files[file][^1];
                 if (previousVersion != content)
-                    Files[file].Add(content);
+                    existingFile.Add(content);
             }
             else
             {
@@ -250,6 +250,7 @@ namespace Voracious_Code_Storage
 
             var orderedResults = results.Distinct().OrderBy(result => result, StringComparer.Ordinal);
             await SendMessageAsync($"OK {orderedResults.Count()}", stream);
+
             foreach (var orderedResult in orderedResults)
                 await SendMessageAsync(orderedResult, stream);
         }

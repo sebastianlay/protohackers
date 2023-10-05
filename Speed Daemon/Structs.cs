@@ -4,36 +4,36 @@
     /// Holds the data related to a reported observation of a certain car
     /// at a certain time on a certain road at a certain position
     /// </summary>
-    public struct Observation
+    internal readonly struct Observation
     {
-        public string Plate { get; init; }
+        internal string Plate { get; init; }
 
-        public uint Timestamp { get; init; }
+        internal uint Timestamp { get; init; }
 
-        public ushort Road { get; init; }
+        internal ushort Road { get; init; }
 
-        public ushort Mile { get; init; }
+        internal ushort Mile { get; init; }
     }
 
     /// <summary>
     /// Holds the data related to a ticket
     /// </summary>
-    public struct Ticket
+    internal struct Ticket
     {
-        public string Plate { get; init; }
+        internal string Plate { get; init; }
 
-        public ushort Road { get; init; }
+        internal ushort Road { get; init; }
 
-        public ushort Mile1 { get; init; }
+        internal ushort Mile1 { get; init; }
 
-        public uint Timestamp1 { get; init; }
+        internal uint Timestamp1 { get; init; }
 
-        public ushort Mile2 { get; init; }
+        internal ushort Mile2 { get; init; }
 
-        public uint Timestamp2 { get; init; }
+        internal uint Timestamp2 { get; init; }
 
-        public ushort Speed { get; init; }
+        internal ushort Speed { get; init; }
 
-        public bool Sent { get; set; }
+        internal bool Sent { get; set; }
     }
 }

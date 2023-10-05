@@ -1,17 +1,17 @@
 ﻿using System.Net.Sockets;
 
-namespace Voracious_Code_Storage
+namespace VoraciousCodeStorage
 {
     internal static class Program
     {
-        const int DefaultPort = 19120;
-        const int MinimumThreads = 100;
+        private const int DefaultPort = 19120;
+        private const int MinimumThreads = 100;
 
         /// <summary>
         /// Main entry point
         /// </summary>
         /// <param name="args">The TCP port the client should listen on</param>
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             // set a minimum thread count to allow the ThreadPool to quickly spawn new threads
             ThreadPool.SetMinThreads(MinimumThreads, MinimumThreads);

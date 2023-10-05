@@ -1,34 +1,34 @@
 ﻿using System.Collections.Concurrent;
 using System.Net;
 
-namespace Line_Reversal
+namespace LineReversal
 {
     /// <summary>
     /// A session of the LRCP protocol
     /// </summary>
-    public class Session : IAsyncDisposable
+    internal sealed class Session : IAsyncDisposable
     {
-        public IPEndPoint EndPoint { get; init; }
+        internal IPEndPoint EndPoint { get; init; }
 
-        public MemoryStream ReceivedData { get; set; }
+        internal MemoryStream ReceivedData { get; set; }
 
-        public MemoryStream SentData { get; set; }
+        internal MemoryStream SentData { get; set; }
 
-        public int ReceivedPos { get; set; }
+        internal int ReceivedPos { get; set; }
 
-        public int ReceivedAck { get; set; }
+        internal int ReceivedAck { get; set; }
 
-        public int SentPos { get; set; }
+        internal int SentPos { get; set; }
 
-        public int LastNewLine { get; set; }
+        internal int LastNewLine { get; set; }
 
-        public DateTime LastActivity { get; set; }
+        internal DateTime LastActivity { get; set; }
 
-        public ConcurrentQueue<Message> Messages { get; set; }
+        internal ConcurrentQueue<Message> Messages { get; set; }
 
-        public bool Closed { get; set; }
+        internal bool Closed { get; set; }
 
-        public Session(IPEndPoint endPoint)
+        internal Session(IPEndPoint endPoint)
         {
             EndPoint = endPoint;
             ReceivedData = new MemoryStream();
@@ -50,13 +50,13 @@ namespace Line_Reversal
     /// <summary>
     /// A message of the LRCP protocol (that can be send again later)
     /// </summary>
-    public class Message
+    internal sealed class Message
     {
-        public int RequiredAck { get; set; }
+        internal int RequiredAck { get; set; }
 
-        public string Content { get; set; }
+        internal string Content { get; set; }
 
-        public Message(int requiredAck, string content)
+        internal Message(int requiredAck, string content)
         {
             RequiredAck = requiredAck;
             Content = content;

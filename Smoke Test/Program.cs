@@ -13,7 +13,7 @@ while (true)
     try
     {
         var client = await listener.AcceptTcpClientAsync();
-        HandleConnectionAsync(client);
+        _ = HandleConnectionAsync(client);
     }
     catch (Exception e)
     {

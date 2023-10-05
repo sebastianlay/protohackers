@@ -3,31 +3,31 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Job_Centre
+namespace JobCentre
 {
     internal static class JobServer
     {
         // use a global lock for all operations on jobs and job collections
         // (since .NET does not have a built-in thread-safe sorted collection and I am not going to write one)
-        public static readonly object globalLock = new();
+        private static readonly object globalLock = new();
 
         // divide jobs into "unassigned" and "assigned" for fast retrieval during a "get" request
         // (since the "get" request only cares about unassigned jobs)
-        public static SortedSet<Job> UnassignedJobs = new(new JobPriorityComparer());
-        public static Dictionary<int, Job> AssignedJobs = new();
+        private static readonly SortedSet<Job> UnassignedJobs = new(new JobPriorityComparer());
+        private static readonly Dictionary<int, Job> AssignedJobs = new();
 
-        public static readonly TimeSpan ConnectionTimeout = TimeSpan.FromMilliseconds(1);
-        public static readonly TimeSpan WaitForJobTimeout = TimeSpan.FromMilliseconds(500);
+        private static readonly TimeSpan ConnectionTimeout = TimeSpan.FromMilliseconds(1);
+        private static readonly TimeSpan WaitForJobTimeout = TimeSpan.FromMilliseconds(500);
 
         // keep track of the assigned client IDs and job IDs
-        public static int MaxJobId;
-        public static int MaxClientId;
+        private static int MaxJobId;
+        private static int MaxClientId;
 
         /// <summary>
         /// Main entry point for a new incoming TCP connection
         /// </summary>
         /// <param name="client"></param>
-        public static async Task HandleConnectionAsync(TcpClient client)
+        internal static async Task HandleConnectionAsync(TcpClient client)
         {
             using var stream = client.GetStream();
             using var streamReader = new StreamReader(stream);
@@ -428,7 +428,7 @@ namespace Job_Centre
     /// <summary>
     /// Comparer that sorts Jobs based on their priority (in descending order)
     /// </summary>
-    public class JobPriorityComparer : IComparer<Job>
+    internal sealed class JobPriorityComparer : IComparer<Job>
     {
         int IComparer<Job>.Compare(Job? x, Job? y)
         {

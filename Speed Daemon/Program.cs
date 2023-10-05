@@ -5,19 +5,19 @@ namespace SpeedDaemon
     /// <summary>
     /// Main wrapper for our program
     /// </summary>
-    public static class Program
+    internal static class Program
     {
-        const int DefaultPort = 19116;
-        const int SupportedClients = 150;
+        private const int DefaultPort = 19116;
+        private const int SupportedClients = 150;
 
-        public static List<Client> Clients { get; set; } = new();
+        internal static List<Client> Clients { get; set; } = new();
 
         /// <summary>
         /// Listens for new clients and spins up a new thread for each connected client
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             int port = args.Length > 0 && int.TryParse(args[0], out port) ? port : DefaultPort;
             var listener = TcpListener.Create(port);
@@ -46,7 +46,7 @@ namespace SpeedDaemon
         /// Runs the main loop of the client to handle incoming messages
         /// </summary>
         /// <param name="tcpClient"></param>
-        static void HandleConnection(TcpClient tcpClient)
+        private static void HandleConnection(TcpClient tcpClient)
         {
             Console.WriteLine("Client connected");
 
@@ -79,6 +79,7 @@ namespace SpeedDaemon
             finally
             {
                 client.Close();
+                client.Dispose();
                 Clients.Remove(client);
             }
 

@@ -1,10 +1,10 @@
-﻿namespace Line_Reversal
+﻿namespace LineReversal
 {
-    public static class Program
+    internal static class Program
     {
-        const int DefaultPort = 19117;
+        private const int DefaultPort = 19117;
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             int port = args.Length > 0 && int.TryParse(args[0], out port) ? port : DefaultPort;
             var client = new LrcpClient(port);

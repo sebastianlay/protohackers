@@ -18,7 +18,7 @@ try
     while (true)
     {
         var result = await client.ReceiveAsync();
-        HandleMessageAsync(result.Buffer, result.RemoteEndPoint);
+        _ = HandleMessageAsync(result.Buffer, result.RemoteEndPoint);
     }
 }
 catch (Exception e)

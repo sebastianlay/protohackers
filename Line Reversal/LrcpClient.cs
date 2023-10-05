@@ -4,28 +4,31 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Line_Reversal
+namespace LineReversal
 {
     /// <summary>
     /// Client that handles the Line Reversal Control Protocol
     /// </summary>
-    public class LrcpClient
+    internal sealed partial class LrcpClient : IDisposable
     {
-        const int SupportedClients = 20;
-        const int MaxPacketSize = 1000;
+        private const int SupportedClients = 20;
+        private const int MaxPacketSize = 1000;
 
-        static readonly TimeSpan RetransmissionTimeout = TimeSpan.FromSeconds(5);
-        static readonly TimeSpan SessionExpiryTimeout = TimeSpan.FromSeconds(60);
+        private static readonly TimeSpan RetransmissionTimeout = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan SessionExpiryTimeout = TimeSpan.FromSeconds(60);
 
         private readonly int _port;
         private readonly UdpClient _client;
         private readonly ConcurrentDictionary<int, Session> _sessions;
 
+        [GeneratedRegex("(?<!\\\\)/", RegexOptions.Compiled)]
+        private static partial Regex ForwardSlashSplit();
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="port">UDP port that the client should listen on</param>
-        public LrcpClient(int port)
+        internal LrcpClient(int port)
         {
             _port = port;
             _client = new UdpClient(_port);
@@ -35,7 +38,7 @@ namespace Line_Reversal
         /// <summary>
         /// Waits for a connection and all subsequent messages
         /// </summary>
-        public async Task Listen()
+        internal async Task Listen()
         {
             await Console.Out.WriteLineAsync($"Listening on {_port}");
             ThreadPool.SetMinThreads(SupportedClients, SupportedClients);
@@ -83,14 +86,14 @@ namespace Line_Reversal
             var escapedMessage = StringHelper.EscapeForConsole(message);
             await Console.Out.WriteLineAsync($"<-- {escapedMessage}");
 
-            if (!message.StartsWith('/') || !message.EndsWith("/"))
+            if (!message.StartsWith('/') || !message.EndsWith('/'))
             {
                 await Console.Out.WriteLineAsync("Invalid message did not start and end with a slash");
                 return;
             }
 
             // split message only on forward slashes that are not proceeded by a backwards slash
-            var splitMessage = Regex.Split(message, @"(?<!\\)/", RegexOptions.Compiled);
+            var splitMessage = ForwardSlashSplit().Split(message);
             splitMessage = splitMessage.Where(m => !string.IsNullOrEmpty(m)).ToArray();
             if (splitMessage == null || splitMessage.Length == 0)
             {
@@ -462,6 +465,14 @@ namespace Line_Reversal
 
                 await Task.Delay((int)RetransmissionTimeout.TotalMilliseconds);
             }
+        }
+
+        /// <summary>
+        /// Disposes the client
+        /// </summary>
+        public void Dispose()
+        {
+            _client.Dispose();
         }
     }
 }

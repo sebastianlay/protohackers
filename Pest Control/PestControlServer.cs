@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace Pest_Control
+namespace PestControl
 {
     internal static class PestControlServer
     {
@@ -64,19 +64,16 @@ namespace Pest_Control
         private static void HandleErrorRequest(BinaryReader reader, BinaryWriter writer, uint length)
         {
             Console.WriteLine("<-- Error");
-
         }
 
         private static void HandleOkRequest(BinaryReader reader, BinaryWriter writer, uint length)
         {
             Console.WriteLine("<-- Ok");
-
         }
 
         private static void HandleSiteVisitRequest(BinaryReader reader, BinaryWriter writer, uint length)
         {
             Console.WriteLine("<-- SiteVisit");
-
         }
 
         private static void SendHelloMessage(BinaryWriter writer)

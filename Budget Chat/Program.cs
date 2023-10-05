@@ -46,7 +46,7 @@ async Task HandleConnection(TcpClient client)
 
             name = proposedName;
             clients?.Add(name, writer);
-            SendToAllClients($"* {name} has entered the room", name);
+            _ = SendToAllClients($"* {name} has entered the room", name);
         }
         catch (Exception e)
         {
@@ -65,7 +65,7 @@ async Task HandleConnection(TcpClient client)
                     break;
                 }
 
-                SendToAllClients($"[{name}] {line}", name);
+                _ = SendToAllClients($"[{name}] {line}", name);
             }
             catch (Exception e)
             {
@@ -115,7 +115,7 @@ void DisconnectClient(string name)
 {
     if (clients != null && name != null)
     {
-        SendToAllClients($"* {name} has left the room", name);
+        _ = SendToAllClients($"* {name} has left the room", name);
         clients.Remove(name);
     }
 }
