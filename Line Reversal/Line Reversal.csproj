@@ -6,7 +6,9 @@
     <RootNamespace>Line_Reversal</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>LineReversal</AssemblyName>
     <Platforms>x64</Platforms>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
   </PropertyGroup>
 
 </Project>

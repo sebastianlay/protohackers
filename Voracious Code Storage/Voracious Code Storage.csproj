@@ -6,7 +6,9 @@
     <RootNamespace>Voracious_Code_Storage</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>VoraciousCodeStorage</AssemblyName>
     <Platforms>x64</Platforms>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
   </PropertyGroup>
 
 </Project>

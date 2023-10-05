@@ -6,7 +6,9 @@
     <RootNamespace>Job_Centre</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>JobCentre</AssemblyName>
     <Platforms>x64</Platforms>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
   </PropertyGroup>
 
 </Project>

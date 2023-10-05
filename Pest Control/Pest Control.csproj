@@ -6,7 +6,9 @@
     <RootNamespace>Pest_Control</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>PestControl</AssemblyName>
     <Platforms>x64</Platforms>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
   </PropertyGroup>
 
 </Project>
