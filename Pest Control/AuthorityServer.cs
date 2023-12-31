@@ -2,15 +2,17 @@
 
 namespace PestControl
 {
-    internal static class PestControlServer
+    internal static class AuthorityServer
     {
+        private static int CurrentAuthority = -1;
+
         internal static void HandleConnection(TcpClient client)
         {
             using var stream = client.GetStream();
             using var reader = new BinaryReader(stream);
             using var writer = new BinaryWriter(stream);
 
-            Console.WriteLine("Client connected");
+            Console.WriteLine("Authority server connected");
 
             Protocol.SendHelloMessage(writer);
 
@@ -31,8 +33,11 @@ namespace PestControl
                         case 0x52:
                             Protocol.HandleOkRequest(reader, writer, totalLength);
                             break;
-                        case 0x58:
-                            Protocol.HandleSiteVisitRequest(reader, writer, totalLength);
+                        case 0x54:
+                            Protocol.HandleTargetPopulationsRequest(reader, writer, totalLength);
+                            break;
+                        case 0x57:
+                            Protocol.HandlePolicyResultRequest(reader, writer, totalLength);
                             break;
                     }
                 }
@@ -42,7 +47,7 @@ namespace PestControl
                 Console.WriteLine(e);
             }
 
-            Console.WriteLine("Client disconnected");
+            Console.WriteLine("Authority server disconnected");
         }
     }
 }
