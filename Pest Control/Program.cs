@@ -1,15 +1,10 @@
-﻿using System.Net.Sockets;
+﻿
+using System.Net.Sockets;
 
 namespace PestControl
 {
     internal static class Program
     {
-        private const int DefaultPort = 19121;
-        private const int MinimumThreads = 100;
-
-        private const string AuthorityHostname = "pestcontrol.protohackers.com";
-        private const int AuthorityPort = 20547;
-
         /// <summary>
         /// Main entry point
         /// </summary>
@@ -17,12 +12,11 @@ namespace PestControl
         private static async Task Main(string[] args)
         {
             // set a minimum thread count to allow the ThreadPool to quickly spawn new threads
-            ThreadPool.SetMinThreads(MinimumThreads, MinimumThreads);
+            ThreadPool.SetMinThreads(Constants.MinimumThreads, Constants.MinimumThreads);
 
-            var authorityServerClient = new TcpClient(AuthorityHostname, AuthorityPort);
-            _ = Task.Run(() => AuthorityServer.HandleConnection(authorityServerClient));
+            _ = Task.Run(AuthorityServer.HandleSiteVisits);
 
-            int port = args.Length > 0 && int.TryParse(args[0], out port) ? port : DefaultPort;
+            int port = args.Length > 0 && int.TryParse(args[0], out port) ? port : Constants.DefaultPort;
             var listener = TcpListener.Create(port);
             listener.Start();
 
@@ -33,7 +27,8 @@ namespace PestControl
                 try
                 {
                     var client = await listener.AcceptTcpClientAsync();
-                    _ = Task.Run(() => PestControlServer.HandleConnection(client));
+                    var postControlServerConnection = new PestControlServerConnection(client, $"client {client.Client.Handle}");
+                    _ = Task.Run(postControlServerConnection.HandleConnection);
                 }
                 catch (Exception e)
                 {

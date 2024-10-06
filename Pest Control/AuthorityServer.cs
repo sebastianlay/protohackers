@@ -1,53 +1,82 @@
-﻿using System.Net.Sockets;
+﻿using System.Collections.Concurrent;
 
 namespace PestControl
 {
-    internal static class AuthorityServer
+    internal sealed class AuthorityServer
     {
-        private static int CurrentAuthority = -1;
+        private static readonly BlockingCollection<SiteVisit> siteVisits = new();
+        private static readonly ConcurrentDictionary<uint, AuthorityServerConnection> connections = new();
 
-        internal static void HandleConnection(TcpClient client)
+        internal static void AddSiteVisit(SiteVisit siteVisit)
         {
-            using var stream = client.GetStream();
-            using var reader = new BinaryReader(stream);
-            using var writer = new BinaryWriter(stream);
+            siteVisits.Add(siteVisit);
+        }
 
-            Console.WriteLine("Authority server connected");
+        internal static void HandleSiteVisits()
+        {
+            foreach (var siteVisit in siteVisits.GetConsumingEnumerable())
+                HandleSiteVisit(siteVisit);
+        }
 
-            Protocol.SendHelloMessage(writer);
+        internal static void CloseConnection(uint site)
+        {
+            if (connections.TryRemove(site, out var connection))
+                connection.Dispose();
+        }
 
-            try
+        private static void HandleSiteVisit(SiteVisit siteVisit)
+        {
+            var targetPopulations = GetTargetPopulations(siteVisit.Site);
+            if (targetPopulations == null)
+                return;
+
+            var reportedPopulations = siteVisit.ReportedPopulations;
+            foreach (var targetPopulation in targetPopulations)
             {
-                while (client.Connected)
+                var species = targetPopulation.Key;
+                if (reportedPopulations.TryGetValue(species, out var reportedPopulation))
                 {
-                    var messageType = reader.ReadByte();
-                    var totalLength = reader.ReadUInt32();
-                    switch (messageType)
-                    {
-                        case 0x50:
-                            Protocol.HandleHelloRequest(reader, writer, totalLength);
-                            break;
-                        case 0x51:
-                            Protocol.HandleErrorRequest(reader, writer, totalLength);
-                            break;
-                        case 0x52:
-                            Protocol.HandleOkRequest(reader, writer, totalLength);
-                            break;
-                        case 0x54:
-                            Protocol.HandleTargetPopulationsRequest(reader, writer, totalLength);
-                            break;
-                        case 0x57:
-                            Protocol.HandlePolicyResultRequest(reader, writer, totalLength);
-                            break;
-                    }
+                    var min = targetPopulation.Value.Min;
+                    var max = targetPopulation.Value.Max;
+                    var count = reportedPopulation.Count;
+
+                    if (count < min)
+                        CreatePolicy(siteVisit.Site, species, Constants.Action.Conserve);
+                    else if (count > max)
+                        CreatePolicy(siteVisit.Site, species, Constants.Action.Cull);
+                    else
+                        DeletePolicy(siteVisit.Site, species);
+                }
+                else
+                {
+                    CreatePolicy(siteVisit.Site, species, Constants.Action.Conserve);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+        }
 
-            Console.WriteLine("Authority server disconnected");
+        private static IReadOnlyDictionary<string, TargetPopulation>? GetTargetPopulations(uint site)
+        {
+            var connection = GetConnection(site);
+            return connection.GetTargetPopulations();
+        }
+
+        private static void CreatePolicy(uint site, string species, byte action)
+        {
+            DeletePolicy(site, species);
+
+            var connection = GetConnection(site);
+            connection.CreatePolicy(species, action);
+        }
+
+        private static void DeletePolicy(uint site, string species)
+        {
+            var connection = GetConnection(site);
+            connection.DeletePolicy(species);
+        }
+
+        private static AuthorityServerConnection GetConnection(uint site)
+        {
+            return connections.GetOrAdd(site, _ => new AuthorityServerConnection(site, $"server {site}"));
         }
     }
 }

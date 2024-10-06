@@ -1,208 +1,98 @@
-﻿using System.Net;
-using System.Text;
-
-namespace PestControl
+﻿namespace PestControl
 {
     internal static class Protocol
     {
-        internal static void HandleHelloRequest(BinaryReader reader, BinaryWriter writer, uint length)
+        internal static void SendHelloMessage(BinaryWriter? writer, string _identifier)
         {
-            Console.WriteLine("<-- Hello");
+            var message = new Message(MessageType.Hello);
+            message.AddPayload(Constants.Protocol.Name);
+            message.AddPayload(Constants.Protocol.Version);
 
-            var protocolLength = reader.ReadUInt32();
-            var protocolChars = reader.ReadChars((int)protocolLength);
-            var version = reader.ReadUInt32();
-            var checksum = reader.ReadByte();
-            var protocol = new string(protocolChars);
+            Console.WriteLine($"{_identifier,20} --> Hello [{Constants.Protocol.Name} {Constants.Protocol.Version}]");
 
-            if (protocol != "pestcontrol" || version != 1 || length != 25 || checksum != 0xce)
-                SendErrorMessage("Invalid Hello message", writer);
+            SendMessage(message, writer);
         }
 
-        internal static void HandleErrorRequest(BinaryReader reader, BinaryWriter writer, uint length)
+        internal static void SendDialAuthorityMessage(uint site, BinaryWriter? writer, string _identifier)
         {
-            Console.WriteLine("<-- Error");
+            var message = new Message(MessageType.DialAuthority);
+            message.AddPayload(site);
 
-            var messageLength = reader.ReadUInt32();
-            var messageChars = reader.ReadChars((int)messageLength);
-            var checksum = reader.ReadByte();
-            var message = new string(messageChars);
+            Console.WriteLine($"{_identifier,20} --> DialAuthority [{site}]");
 
-            // TODO
+            SendMessage(message, writer);
         }
 
-        internal static void HandleOkRequest(BinaryReader reader, BinaryWriter writer, uint length)
+        internal static void SendCreatePolicyMessage(string species, byte action, BinaryWriter? writer, string _identifier)
         {
-            Console.WriteLine("<-- Ok");
+            var message = new Message(MessageType.CreatePolicy);
+            message.AddPayload(species);
+            message.AddPayload(action);
 
-            var checksum = reader.ReadByte();
+            Console.WriteLine($"{_identifier,20} --> CreatePolicy [{species} {action}]");
 
-            // TODO
+            SendMessage(message, writer);
         }
 
-        internal static void HandleSiteVisitRequest(BinaryReader reader, BinaryWriter writer, uint length)
+        internal static void SendDeletePolicyMessage(uint id, BinaryWriter? writer, string _identifier)
         {
-            Console.WriteLine("<-- SiteVisit");
+            var message = new Message(MessageType.DeletePolicy);
+            message.AddPayload(id);
 
-            var site = reader.ReadUInt32();
-            var populationCount = reader.ReadUInt32();
+            Console.WriteLine($"{_identifier,20} --> DeletePolicy [{id}]");
 
-            var populations = new List<Population>();
-
-            for (int i = 0; i < populationCount; i++)
-            {
-                var speciesLength = reader.ReadUInt32();
-                var species = reader.ReadChars((int)speciesLength);
-                var count = reader.ReadUInt32();
-
-                var population = new Population(new string(species), (int)count);
-                populations.Add(population);
-            }
-
-            var checksum = reader.ReadByte();
-
-            // TODO
+            SendMessage(message, writer);
         }
 
-        internal static void HandleTargetPopulationsRequest(BinaryReader reader, BinaryWriter writer, uint length)
+        internal static void SendErrorMessage(string text, BinaryWriter? writer, string _identifier)
         {
-            Console.WriteLine("<-- TargetPopulations");
+            var message = new Message(MessageType.Error);
+            message.AddPayload(text);
 
-            var site = reader.ReadUInt32();
-            var populationCount = reader.ReadUInt32();
+            Console.WriteLine($"{_identifier,20} --> Error [{text}]");
 
-            var populations = new List<Population>();
-
-            for (int i = 0; i < populationCount; i++)
-            {
-                var speciesLength = reader.ReadUInt32();
-                var species = reader.ReadChars((int)speciesLength);
-                var min = reader.ReadUInt32();
-                var max = reader.ReadUInt32();
-
-                var population = new Population(new string(species), (int)min, (int)max);
-                populations.Add(population);
-            }
-
-            var checksum = reader.ReadByte();
-
-            // TODO: react to target population
+            SendMessage(message, writer);
         }
 
-        internal static void HandlePolicyResultRequest(BinaryReader reader, BinaryWriter writer, uint length)
+        internal static Message ReceiveMessage(BinaryReader? reader, string _identifier)
         {
-            Console.WriteLine("<-- PolicyResult");
+            var type = reader?.ReadByte() ?? 0;
+            var messageLengthBytes = reader?.ReadBytesExactly(4) ?? Array.Empty<byte>();
+            if (messageLengthBytes.Length < 4)
+                throw new InvalidDataException("Could not read the length of the message");
 
-            var policy = reader.ReadUInt32();
-            var checksum = reader.ReadByte();
+            var messageLength = Extensions.ToUInt32BigEndian(messageLengthBytes);
+            if (messageLength > int.MaxValue)
+                throw new InvalidDataException("The given length of the message does not have a valid value");
 
-            // TODO
+            var convertedMessageLength = Convert.ToInt32(messageLength);
+            var payloadLength = convertedMessageLength - Constants.Message.Overhead;
+            if (payloadLength < 0 || payloadLength > int.MaxValue)
+                throw new InvalidDataException("The given length of the payload does not have a valid value");
+
+            var payload = reader?.ReadBytesExactly(payloadLength) ?? Array.Empty<byte>();
+            if (payload.Length != payloadLength)
+                throw new InvalidDataException("The length of the payload is shorter than the given length");
+
+            var checksum = reader?.ReadByte();
+            var message = new Message(type, payload, messageLengthBytes);
+
+            Console.WriteLine($"{_identifier,20} <-- {(MessageType)type}");
+
+            if ((MessageType)type == MessageType.Error)
+                throw new InvalidDataException("The message is of type error");
+
+            if (checksum != message.Checksum)
+                throw new InvalidDataException("The checksum of the message is incorrect");
+
+            return message;
         }
 
-        internal static void SendHelloMessage(BinaryWriter writer)
+        private static void SendMessage(Message? message, BinaryWriter? writer)
         {
-            Console.WriteLine("--> Hello");
-
-            var protocol = ToBytes("pestcontrol");
-            var version = ToBytes(1);
-            var payload = protocol.Concat(version).ToArray();
-
-            SendMessage(payload, 0x50, writer);
+            var builtMessage = message?.Build();
+            if (builtMessage != null)
+                writer?.Write(builtMessage);
         }
-
-        internal static void SendErrorMessage(string message, BinaryWriter writer)
-        {
-            Console.WriteLine($"--> Error: {message}");
-
-            var payload = ToBytes(message);
-
-            SendMessage(payload, 0x51, writer);
-        }
-
-        internal static void SendDialAuthorityMessage(uint authority, BinaryWriter writer)
-        {
-            Console.WriteLine($"--> DialAuthority: {authority}");
-
-            var payload = ToBytes(authority);
-
-            SendMessage(payload, 0x53, writer);
-        }
-
-        internal static void SendCreatePolicyMessage(string species, byte action, BinaryWriter writer)
-        {
-            Console.WriteLine($"--> CreatePolicy: {species} {action}");
-
-            var speciesBytes = ToBytes(species);
-            var payload = speciesBytes.Append(action).ToArray();
-
-            SendMessage(payload, 0x55, writer);
-        }
-
-        internal static void SendDeletePolicyMessage(uint policy, BinaryWriter writer)
-        {
-            Console.WriteLine($"--> DeletePolicy: {policy}");
-
-            var payload = ToBytes(policy);
-
-            SendMessage(payload, 0x56, writer);
-        }
-
-        internal static void SendMessage(byte[] payload, byte messageType, BinaryWriter writer)
-        {
-            uint totalLength = (uint)payload.Length + 6;
-            uint checksum = messageType + totalLength;
-            foreach (var item in payload)
-                checksum += item;
-
-            checksum = 256 - (checksum % 256);
-
-            writer.Write(messageType);
-            writer.Write(totalLength);
-            writer.Write(payload);
-            writer.Write(checksum);
-        }
-
-        private static byte[] ToBytes(string value)
-        {
-            var valueBytes = Encoding.ASCII.GetBytes(value);
-            var valueLength = ToBytes(valueBytes.Length);
-
-            return valueLength.Concat(valueBytes).ToArray();
-        }
-
-        private static byte[] ToBytes(int value)
-        {
-            uint bigEndian = (uint)IPAddress.HostToNetworkOrder(value);
-            return BitConverter.GetBytes(bigEndian);
-        }
-
-        private static byte[] ToBytes(uint value)
-        {
-            return ToBytes((int)value);
-        }
-    }
-
-    internal readonly struct Population
-    {
-        public Population(string species, int min, int max)
-        {
-            Species = species;
-            Min = min;
-            Max = max;
-        }
-
-        public Population(string species, int count)
-        {
-            Species = species;
-            Count = count;
-        }
-
-        internal readonly string Species;
-
-        internal readonly int Min;
-
-        internal readonly int Max;
-
-        internal readonly int Count;
     }
 }
